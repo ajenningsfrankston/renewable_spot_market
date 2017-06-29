@@ -42,7 +42,8 @@ for (hr in 2:23) {
   
   sdr <- mean_supply[hr]/mean_hour_demand[hr,]$demand
   sdrs <- sprintf("%1.2f",sdr)
-  header <- paste0("mean supply/demand ",sdrs)
+  tsrs <- sprintf("%1.1f",storage_capacity)
+  header <- paste0(tsrs,"GwHr mean supply/demand ",sdrs)
   
   hist(storage[hr,],main= paste0(header,"  Storage ",toString(hr)), freq=F,  xlim=c(0,max(storage[hr,])))
   
