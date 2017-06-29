@@ -1,0 +1,21 @@
+{
+    "debugBreakpointsState" : {
+        "breakpoints" : [
+            {
+                "editor_line_number" : 9,
+                "editor_state" : 1,
+                "function_name" : "convolution",
+                "function_steps" : "4",
+                "id" : 2,
+                "is_package_breakpoint" : false,
+                "is_pending_debug_completion" : true,
+                "line_number" : 9,
+                "needs_updated_steps" : false,
+                "package_name" : "",
+                "path" : "~/renewable_spot_market/src/convolution.R",
+                "state" : 1,
+                "type" : 0
+            }
+        ]
+    }
+}

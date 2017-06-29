@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "#\n# sum all the densities ...\n#\nlibrary(gtools)\nlibrary(ggplot2)\nlibrary(readr)\n\nsource(\"convolution.R\")\nsource(\"normd.R\")\n\nall_files <- list.files(path=\"../rdata\")\nsolar_files <- all_files[which(startsWith(all_files,\"sl_\"))]\nsolar_files <- mixedsort(solar_files)\n\n\nwind_files <- all_files[which(startsWith(all_files,\"wd_\"))]\nwind_files <- mixedsort(wind_files)\n\nsolar_files <- paste0(\"../rdata/\",solar_files)\nwind_files <- paste0(\"../rdata/\",wind_files)\n\n# sum wind densities\n\nload(wind_files[1])\n\nsum_wind_density <- wind_density\n\nfor (wind_file in wind_files[-1]) {\n  \n  load(wind_file)\n  d <- convolution(sum_wind_density,wind_density)\n  pd = data.frame(x=d$z,y=d$dz)\n  pd <- normd(pd)\n  \n  sum_wind_density <- pd\n  \n}\n\ntitle=\"sum wind density\"\n\n#p <- ggplot(sum_wind_density,aes(x=x,y=y)) + geom_line() + ggtitle(title)\n#print(p)\n\n\n# solar density hrs 7-22 zero outside those times\n\nload(solar_files[1])\nsolar_densities_sum = solar_densities\n\nfor (solar_file in solar_files[-1]) {\n  \n  load(solar_file)\n  \n  for (time in 7:22) {\n\n    d <- convolution(solar_densities_sum[[time]],solar_densities[[time]])\n    pd = data.frame(x=d$z,y=d$dz)\n    pd <- normd(pd)\n    \n    solar_densities_sum[[time]] <- pd\n    \n  }\n  \n}\n\n# sum solar and wind together\n\nsum_densities = list()\n\n\n\nfor (time in 1:24) {\n  \n  if (time >= 7 && time <= 22) { \n    d <- convolution(solar_densities_sum[[time]],sum_wind_density)\n    \n    pd = data.frame(x=d$z,y=d$dz)\n    pd <- normd(pd)\n    \n    sum_densities[[time]] <- pd\n    \n  } else {\n    sum_densities[[time]] <- sum_wind_density\n  }\n  \n}\n\n\n\nsave(sum_densities,file=\"../rdata/list_sum_densities.rd\")\n\nfor (time in 1:24) {\n  \n  title = paste(\"Time of day \",time,\":00\",sep=\"\")\n  \n  p <- ggplot(sum_densities[[time]],aes(x=x,y=y)) + geom_line() + ggtitle(title)\n  print(p)\n  \n  Sys.sleep(1)\n  \n}\n\n",
+    "created" : 1497840642770.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1274610292",
+    "id" : "BD7B77CC",
+    "lastKnownWriteTime" : 1497840675,
+    "last_content_update" : 1497840675273,
+    "path" : "~/renewable_spot_market/src/sum_wind_solar.R",
+    "project_path" : "sum_wind_solar.R",
+    "properties" : {
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

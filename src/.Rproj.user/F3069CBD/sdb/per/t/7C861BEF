@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "library(lubridate)\nlibrary(dplyr)\n\naemo_data = read.csv(\"../data/PRICE_AND_DEMAND_201702_VIC1.csv\")\n\nt <- aemo_data[,2]\nd <- aemo_data[,3]\nday_demand = data.frame(hour(t),minute(t),d)\nnames(day_demand) <- c(\"hour\",\"minute\",\"demand\")\nday_hour_demand <- filter(day_demand,minute == 0)\n\n\nmean_hour_demand = data.frame(1:23,0)\nnames(mean_hour_demand) <- c(\"hour\",\"demand\")\n\nfor (hr in 1:23){ \n  v <- filter(day_hour_demand,hour==hr)\n  m <- mean(v$demand)\n  mean_hour_demand$demand[hr] <- m/1000.0\n}\n\nsave(mean_hour_demand,file=\"../rdata/feb_2017_demand.rd\")\n",
+    "created" : 1498631906810.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2218272291",
+    "id" : "7C861BEF",
+    "lastKnownWriteTime" : 1497342524,
+    "last_content_update" : 1497342524,
+    "path" : "~/renewable_spot_market/src/create_hourly_demand.R",
+    "project_path" : "create_hourly_demand.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

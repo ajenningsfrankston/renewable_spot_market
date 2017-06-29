@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "library(ggplot2)\nlibrary(distr)\n\nsource(\"supply_power.R\")\n\nload(\"../rdata/list_sum_densities.rd\")\nload(\"../rdata/feb_2017_demand.rd\")\n\nsurplus = matrix(nrow=24,ncol=1000)\nhydro = matrix(nrow=24,ncol=1000,0)\nstorage = matrix(nrow=24,ncol=1000,0)\n\nstorage_capacity = 5   #1GwHr of storage capacity\n\nmean_supply = vector(length=24)\n\nfor (time in 1:23) {\n  \n  sum_densities[[time]]$x <- sum_densities[[time]]$x - mean_hour_demand[time,]$demand\n  \n  sd <- sum_densities[[time]]\n  px <- approxfun(sd$x,sd$y,yleft=0,yright=0,method=\"linear\",rule=2)\n  \n  dist <-AbscontDistribution(d=px)  \n  rdist <- r(dist)                 \n  \n  set.seed(1)                      # for reproduceable example\n  X <- rdist(1000)                 # sample from X ~ p\n  \n  mean_supply[time] <- mean(X)\n\n  surplus[time,] <- X\n  \n}\n\nfor (hr in 2:23) { \n  \n  t <- mapply(supply_power,surplus[hr,],storage[hr-1,],hydro[hr-1,],SIMPLIFY=FALSE,storage_capacity)\n  \n  storage[hr,] <- unlist(lapply(t,function(x) x$Storage))\n  hydro[hr,] <- unlist(lapply(t,function(x) x$Hydro))\n  \n  sdr <- mean_supply[hr]/mean_hour_demand[hr,]$demand\n  sdrs <- sprintf(\"%1.2f\",sdr)\n  header <- paste0(\"mean supply/demand \",sdrs)\n  \n  hist(storage[hr,],main= paste0(header,\"  Storage \",toString(hr)), freq=F,  xlim=c(0,max(storage[hr,])))\n  \n  Sys.sleep(1)\n  \n  hist(hydro[hr,],main= paste0(header,\"  Hydro \",toString(hr)), freq=F, xlim=c(0,max(hydro[hr,])))\n  \n  Sys.sleep(1)\n  \n  }\n\nsave(storage,file=\"../rdata/hydro.rd\")\nsave(hydro,file=\"../rdata/storage.rd\")\n\n\n",
+    "created" : 1497762420628.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2067070569",
+    "id" : "8E3336CD",
+    "lastKnownWriteTime" : 1497929472,
+    "last_content_update" : 1497929472393,
+    "path" : "~/renewable_spot_market/src/calc_storage_hydro.R",
+    "project_path" : "calc_storage_hydro.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
