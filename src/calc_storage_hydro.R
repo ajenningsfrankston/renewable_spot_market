@@ -10,7 +10,7 @@ surplus = matrix(nrow=24,ncol=1000)
 hydro = matrix(nrow=24,ncol=1000,0)
 storage = matrix(nrow=24,ncol=1000,0)
 
-storage_capacity = 5   #1GwHr of storage capacity
+storage_capacity = 1   #1GwHr of storage capacity
 
 mean_supply = vector(length=24)
 
